@@ -18,7 +18,6 @@ public  abstract class Menu {
     private int obtenerEntradaInt(){
         System.out.print(":");
         String entradaUsuario = scanner.next();
-        System.out.println(validarEntradaInt(entradaUsuario));
         while (!validarEntradaInt(entradaUsuario)){
             System.out.println("Opcion ingresada no valida, ingrese nuevamente un valor correcto");
             System.out.print(":");

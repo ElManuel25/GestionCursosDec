@@ -1,11 +1,19 @@
-import java.util.Scanner;
-
 public class MenuPrincipal extends Menu {
     public MenuPrincipal() {
         Boolean continuar = true;
         while(continuar) {
-            mostrarOpciones("===== MENÚ DE OPCIONES =====","[ GESTIÓN DE CURSOS ]","Ver cursos","Crear curso","Editar curso","Eliminar curso");
-            int opcion = leerOpcion(5);
+            mostrarOpciones("===== MENÚ DE OPCIONES =====","[GESTIONES]","GESTIÓN DE CURSOS","GESTIÓN DE ASIGNATURAS","GESTIÓN DE DOCENTES ","GESTIÓN DE SALONES");
+            int opcion = leerOpcion(4);
+            switch (opcion){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+            }
             continuar = confirmarContinuar() == 1;
         }
     }

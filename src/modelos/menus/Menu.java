@@ -1,3 +1,6 @@
+package modelos.menus;
+
+import java.util.LinkedList;
 import java.util.Scanner;
 
 public  abstract class Menu {
@@ -24,6 +27,11 @@ public  abstract class Menu {
             entradaUsuario = scanner.next();
         }
         return Integer.parseInt(entradaUsuario);
+    }
+    public void verIterable(LinkedList<Object> lista){
+        for (int i = 0;i < lista.size();i++){
+            System.out.printf("[%d] %s%n", i+1,lista.get(i).toString());
+        }
     }
     private boolean validarEntradaInt(String entrada){
         return entrada.matches("\\d+");

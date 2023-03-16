@@ -1,3 +1,5 @@
+package modelos.entidades;
+
 public class Docente {
     private final String documento;
     private String nombre;

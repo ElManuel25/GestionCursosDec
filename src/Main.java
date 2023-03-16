@@ -1,3 +1,8 @@
+import modelos.entidades.Asignatura;
+import modelos.entidades.Docente;
+import modelos.menus.MenuPrincipal;
+import modelos.entidades.Salon;
+
 import java.util.LinkedList;
 
 public class Main {

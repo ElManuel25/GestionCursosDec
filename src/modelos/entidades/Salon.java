@@ -80,15 +80,15 @@ public class Salon {
         }
     }
 
-    public void resetearHorario() {
-        this.horario = new Curso[5][8];
-    }
-
     public Boolean eliminarClaseDelHorario(Dia dia, Hora hora) {
         if (this.horario[dia.ordinal()][hora.ordinal()] != null) {
             this.horario[dia.ordinal()][hora.ordinal()] = null;
         }
         return true;
+    }
+
+    public void resetearHorario() {
+        this.horario = new Curso[5][8];
     }
 
     private String horaAString(Hora hora) {

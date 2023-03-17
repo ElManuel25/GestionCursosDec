@@ -1,12 +1,14 @@
 package modelos.entidades;
 
 public class Asignatura {
-    private final String codigo;
+    private String codigo;
     private String nombre;
 
     public String getCodigo() {
         return codigo;
     }
+
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     public String getNombre() {
         return nombre;

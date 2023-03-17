@@ -3,7 +3,7 @@ package modelos.entidades;
 import java.util.LinkedList;
 
 public class Curso {
-    private final String codigo;
+    private String codigo;
     private Asignatura asignatura;
     private Docente docente;
     private int numeroEstudiantes;
@@ -12,6 +12,8 @@ public class Curso {
     public String getCodigo() {
         return codigo;
     }
+
+    public void setCodigo(String codigo) { this.codigo = codigo; }
 
     public Asignatura getAsignatura() {
         return asignatura;

@@ -3,12 +3,16 @@ package modelos.entidades;
 import java.util.Arrays;
 
 public class Salon {
-    private final String codigo;
+    private String codigo;
     private String descripcion;
     private Curso[][] horario;
 
     public String getCodigo() {
         return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getDescripcion() {
@@ -21,10 +25,6 @@ public class Salon {
 
     public Curso[][] getHorario() {
         return horario;
-    }
-
-    public void setHorario(Curso[][] horario) {
-        this.horario = horario;
     }
 
     public Salon(String codigo, String descripcion) {
@@ -43,7 +43,11 @@ public class Salon {
                 if (horario[j][i] == null) {
                     clasesHora[j] = "";
                 } else {
-                    clasesHora[j] = horario[j][i].getAsignatura().getNombre().substring(0, 20) +
+                    String nombreAsignatura = horario[j][i].getAsignatura().getNombre();
+                    if (nombreAsignatura.length() > 21) {
+                        nombreAsignatura = nombreAsignatura.substring(0, 20);
+                    }
+                    clasesHora[j] = nombreAsignatura +
                             " (" +
                             horario[j][i].getCodigo() +
                             ")";
@@ -63,6 +67,28 @@ public class Salon {
         } else {
             return false;
         }
+    }
+
+    public Boolean eliminarClaseDelHorario(Curso curso, Dia dia, Hora hora) {
+        if (this.horario[dia.ordinal()][hora.ordinal()] == null) {
+            return true;
+        } else if (this.horario[dia.ordinal()][hora.ordinal()] == curso) {
+            this.horario[dia.ordinal()][hora.ordinal()] = null;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void resetearHorario() {
+        this.horario = new Curso[5][8];
+    }
+
+    public Boolean eliminarClaseDelHorario(Dia dia, Hora hora) {
+        if (this.horario[dia.ordinal()][hora.ordinal()] != null) {
+            this.horario[dia.ordinal()][hora.ordinal()] = null;
+        }
+        return true;
     }
 
     private String horaAString(Hora hora) {

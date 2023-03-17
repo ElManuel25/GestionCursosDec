@@ -1,12 +1,14 @@
 package modelos.entidades;
 
 public class Docente {
-    private final String documento;
+    private String documento;
     private String nombre;
 
     public String getDocumento() {
         return documento;
     }
+
+    public void setDocumento(String documento) { this.documento = documento; }
 
     public String getNombre() {
         return nombre;

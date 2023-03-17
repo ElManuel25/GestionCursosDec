@@ -1,5 +1,5 @@
 public class Main {
     public static void main(String[] args) {
-        Menu.main();
+        Salon sln = new Salon("9494", "kfjdki");
     }
 }

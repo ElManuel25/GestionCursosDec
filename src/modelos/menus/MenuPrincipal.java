@@ -1,18 +1,28 @@
-import java.util.Scanner;
+package modelos.menus;
 
-public class Menu {
-    private static int opcion = -1;
-    final static Scanner scanner = new Scanner(System.in);
+import modelos.menus.Menu;
 
-    public static void main() {
-        while(opcion != 0) {
-            mostrarOpciones();
-            leerOpcion();
-            confirmarContinuar();
+public class MenuPrincipal extends Menu {
+    public MenuPrincipal() {
+        Boolean continuar = true;
+        while(continuar) {
+            mostrarOpciones("===== MENÚ DE OPCIONES =====","[GESTIONES]","GESTIÓN DE CURSOS","GESTIÓN DE ASIGNATURAS","GESTIÓN DE DOCENTES ","GESTIÓN DE SALONES");
+            int opcion = leerOpcion(4);
+            switch (opcion){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+            }
+            continuar = confirmarContinuar() == 1;
         }
     }
 
-    public static void mostrarOpciones() {
+    /*public void mostrarOpciones() {
         System.out.println(
             "===== MENÚ DE OPCIONES =====\n" +
             "[ GESTIÓN DE CURSOS ]\n" +
@@ -36,17 +46,5 @@ public class Menu {
             "    [15] Editar salón\n" +
             "    [16] Eliminar salón\n"
         );
-    }
-
-    public static void leerOpcion() {
-
-    }
-
-    public static void confirmarContinuar() {
-        System.out.print("[!] ¿Desea continuar? Presione 1 para continuar o 0 para salir: ");
-        int op = scanner.nextInt();
-        if(op != 1) {
-            System.exit(0);
-        }
-    }
+    }*/
 }

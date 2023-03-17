@@ -1,3 +1,5 @@
+package modelos.entidades;
+
 public class Salon {
     private final String codigo;
     private String descripcion;

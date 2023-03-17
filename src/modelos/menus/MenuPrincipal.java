@@ -1,7 +1,5 @@
 package modelos.menus;
 
-import modelos.menus.Menu;
-
 public class MenuPrincipal extends Menu {
     public MenuPrincipal() {
         Boolean continuar = true;

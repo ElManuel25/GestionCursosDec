@@ -1,3 +1,5 @@
+package modelos.entidades;
+
 public class Curso {
     private final String codigo;
     private Asignatura asignatura;

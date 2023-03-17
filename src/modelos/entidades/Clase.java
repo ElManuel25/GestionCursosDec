@@ -1,3 +1,5 @@
+package modelos.entidades;
+
 import java.time.DayOfWeek;
 import java.time.LocalTime;
 

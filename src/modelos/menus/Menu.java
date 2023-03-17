@@ -19,11 +19,11 @@ public  abstract class Menu {
         return opcion;
     }
     private int obtenerEntradaInt(){
-        System.out.print(":");
+        System.out.print("> ");
         String entradaUsuario = scanner.next();
         while (!validarEntradaInt(entradaUsuario)){
             System.out.println("Opcion ingresada no valida, ingrese nuevamente un valor correcto");
-            System.out.print(":");
+            System.out.print("> ");
             entradaUsuario = scanner.next();
         }
         return Integer.parseInt(entradaUsuario);

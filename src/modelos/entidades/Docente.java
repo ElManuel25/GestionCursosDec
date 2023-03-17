@@ -20,4 +20,12 @@ public class Docente {
         this.documento = documento;
         this.nombre = nombre;
     }
+
+    @Override
+    public String toString() {
+        return "Docente{" +
+                "documento='" + documento + '\'' +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 }

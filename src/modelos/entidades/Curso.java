@@ -1,10 +1,14 @@
 package modelos.entidades;
 
+import java.util.LinkedList;
+
 public class Curso {
     private final String codigo;
     private Asignatura asignatura;
     private Docente docente;
     private int numeroEstudiantes;
+    private Salon salon;
+
     public String getCodigo() {
         return codigo;
     }
@@ -33,10 +37,26 @@ public class Curso {
         this.numeroEstudiantes = numeroEstudiantes;
     }
 
-    public Curso(String codigo, Asignatura asignatura, Docente docente, int numeroEstudiantes) {
+    public Salon getSalon() { return salon; }
+
+    public void setSalon(Salon salon) { this.salon = salon; }
+
+    public Curso(String codigo, Asignatura asignatura, Docente docente, int numeroEstudiantes, Salon salon) {
         this.codigo = codigo;
         this.asignatura = asignatura;
         this.docente = docente;
         this.numeroEstudiantes = numeroEstudiantes;
+        this.salon = salon;
+    }
+
+    @Override
+    public String toString() {
+        return "Curso{" +
+                "codigo='" + codigo + '\'' +
+                ", asignatura=" + asignatura +
+                ", docente=" + docente +
+                ", numeroEstudiantes=" + numeroEstudiantes +
+                ", salon=" + salon +
+                '}';
     }
 }

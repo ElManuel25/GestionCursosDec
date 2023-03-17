@@ -20,4 +20,12 @@ public class Asignatura {
         this.codigo = codigo;
         this.nombre = nombre;
     }
+
+    @Override
+    public String toString() {
+        return "Asignatura{" +
+                "codigo='" + codigo + '\'' +
+                ", nombre='" + nombre + '\'' +
+                '}';
+    }
 }

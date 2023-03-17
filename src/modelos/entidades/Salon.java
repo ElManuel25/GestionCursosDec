@@ -42,9 +42,8 @@ public class Salon {
             for (int j = 0; j < 5; j++) {
                 if (horario[j][i] == null) {
                     clasesHora[j] = "";
-                }
-                else {
-                    clasesHora[j] = horario[j][i].getAsignatura().getNombre().substring(0,20) +
+                } else {
+                    clasesHora[j] = horario[j][i].getAsignatura().getNombre().substring(0, 20) +
                             " (" +
                             horario[j][i].getCodigo() +
                             ")";

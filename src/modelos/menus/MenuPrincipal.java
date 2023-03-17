@@ -10,12 +10,16 @@ public class MenuPrincipal extends Menu {
             int opcion = leerOpcion(4);
             switch (opcion){
                 case 1:
+                    //GESTIÓN CURSOS
                     break;
                 case 2:
+                    //GESTIÓN ASIGNATURAS
                     break;
                 case 3:
+                    //GESTIÓN DOCENTES
                     break;
                 case 4:
+                    //GESTIÓN SALONES
                     break;
             }
             continuar = confirmarContinuar() == 1;

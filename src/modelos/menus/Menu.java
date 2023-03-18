@@ -29,7 +29,7 @@ public  abstract class Menu {
         return Integer.parseInt(entradaUsuario);
     }
     public void verIterable(LinkedList<?> lista){
-        if(lista.stream().count() < 1) {
+        if(lista.size() < 1) {
             System.out.println("***Lista vacía***");
         } else {
             for (int i = 0; i < lista.size(); i++) {
@@ -53,7 +53,6 @@ public  abstract class Menu {
         int numeroOpcion= 1;
         for(String opcion:opciones){
             sb.append("[%d] %s  \n".formatted(numeroOpcion,opcion));
-
             numeroOpcion++;
         }
         System.out.println(sb.toString());

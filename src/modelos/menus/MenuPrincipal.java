@@ -4,6 +4,7 @@ import modelos.entidades.Curso;
 import modelos.entidades.Asignatura;
 import modelos.entidades.Docente;
 import modelos.entidades.Salon;
+
 import java.util.LinkedList;
 
 public class MenuPrincipal extends Menu {
@@ -14,11 +15,11 @@ public class MenuPrincipal extends Menu {
             LinkedList<Salon> salones
     ) {
         Boolean continuar = true;
-        while(continuar) {
-            mostrarOpciones("===== MENÚ DE OPCIONES =====","[GESTIONES]",
-                    "GESTIÓN DE CURSOS","GESTIÓN DE ASIGNATURAS","GESTIÓN DE DOCENTES","GESTIÓN DE SALONES");
+        while (continuar) {
+            mostrarOpciones("===== MENÚ DE OPCIONES =====",
+                    "GESTIÓN DE CURSOS", "GESTIÓN DE ASIGNATURAS", "GESTIÓN DE DOCENTES", "GESTIÓN DE SALONES");
             int opcion = leerOpcion(4);
-            switch (opcion){
+            switch (opcion) {
                 case 1:
                     MenuCursos menuCursos = new MenuCursos(cursos);
                     break;

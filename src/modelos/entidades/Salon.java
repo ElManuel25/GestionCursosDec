@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public class Salon {
     private String codigo;
-    private String descripcion;
     private Curso[][] horario;
 
     public String getCodigo() {
@@ -15,21 +14,12 @@ public class Salon {
         this.codigo = codigo;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
     public Curso[][] getHorario() {
         return horario;
     }
 
-    public Salon(String codigo, String descripcion) {
+    public Salon(String codigo) {
         this.codigo = codigo;
-        this.descripcion = descripcion;
         this.horario = new Curso[5][8];
     }
 
@@ -99,7 +89,6 @@ public class Salon {
     public String toString() {
         return "Salon{" +
                 "codigo='" + codigo + '\'' +
-                ", descripcion='" + descripcion + '\'' +
                 '}';
     }
 }

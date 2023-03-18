@@ -13,7 +13,7 @@ public  abstract class Menu {
     public int leerOpcion(int cantidadOpciones) {
         int opcion = obtenerEntradaInt();
         while (opcion > cantidadOpciones){
-            System.out.println("Valor ingresado sobrepasa a las opciones dadas ingrese nuevamente un valor correcto.");
+            System.out.println("Valor ingresado sobrepasa a las opciones dadas, ingrese nuevamente un valor correcto.");
             opcion = obtenerEntradaInt();
         }
         return opcion;
@@ -22,15 +22,19 @@ public  abstract class Menu {
         System.out.print("> ");
         String entradaUsuario = scanner.next();
         while (!validarEntradaInt(entradaUsuario)){
-            System.out.println("Opcion ingresada no valida, ingrese nuevamente un valor correcto");
-            System.out.print("> ");
+            System.out.println("Opción ingresada no válida, ingrese nuevamente un valor correcto.");
+
             entradaUsuario = scanner.next();
         }
         return Integer.parseInt(entradaUsuario);
     }
-    public void verIterable(LinkedList<Object> lista){
-        for (int i = 0;i < lista.size();i++){
-            System.out.printf("[%d] %s%n", i+1,lista.get(i).toString());
+    public void verIterable(LinkedList<?> lista){
+        if(lista.stream().count() < 1) {
+            System.out.println("***Lista vacía***");
+        } else {
+            for (int i = 0; i < lista.size(); i++) {
+                System.out.printf("[%d] %s%n", i + 1, lista.get(i).toString());
+            }
         }
     }
     private boolean validarEntradaInt(String entrada){
@@ -38,13 +42,13 @@ public  abstract class Menu {
     }
     public String obtenerEntradaTexto(String pregunta){
         System.out.println(pregunta);
-        return  scanner.nextLine();
+        System.out.print("> ");
+        return scanner.next();
     }
-    public void mostrarOpciones(String titulo,String cabecera, String ...opciones){
+    public void mostrarOpciones(String titulo, String ...opciones){
         StringBuilder sb = new StringBuilder();
-        sb.append(titulo);
         sb.append("\n");
-        sb.append(cabecera);
+        sb.append(titulo);
         sb.append("\n");
         int numeroOpcion= 1;
         for(String opcion:opciones){

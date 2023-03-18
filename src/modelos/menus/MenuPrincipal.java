@@ -15,7 +15,7 @@ public class MenuPrincipal extends Menu {
     ) {
         Boolean continuar = true;
         while (continuar) {
-            mostrarOpciones("===== MENÚ DE OPCIONES =====",
+            mostrarOpciones("===== MENÚ PRINCIPAL =====", "Opciones:",
                     "GESTIÓN DE CURSOS", "GESTIÓN DE ASIGNATURAS", "GESTIÓN DE DOCENTES", "GESTIÓN DE SALONES");
             int opcion = leerOpcion(4);
             switch (opcion){

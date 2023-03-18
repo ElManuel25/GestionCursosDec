@@ -13,12 +13,12 @@ public  abstract class Menu {
     public int leerOpcion(int cantidadOpciones) {
         int opcion = obtenerEntradaInt();
         while (opcion > cantidadOpciones || opcion <=0){
-            System.out.println("Opción ingresada no valida, ingrese nuevamente un valor correcto");
+            System.out.println("Opción ingresada no válida, ingrese nuevamente un valor correcto.");
             opcion = obtenerEntradaInt();
         }
         return opcion;
     }
-    private int obtenerEntradaInt(){
+    public int obtenerEntradaInt(){
         System.out.print("> ");
         String entradaUsuario = scanner.next();
         while (!validarEntradaInt(entradaUsuario)){

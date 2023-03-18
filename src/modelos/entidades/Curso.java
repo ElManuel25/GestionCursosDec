@@ -55,10 +55,10 @@ public class Curso {
     public String toString() {
         return "Curso{" +
                 "codigo='" + codigo + '\'' +
-                ", asignatura=" + asignatura +
-                ", docente=" + docente +
+                ", asignatura='" + asignatura.getNombre() + '\'' +
+                ", docente='" + docente.getNombre() + '\'' +
                 ", numeroEstudiantes=" + numeroEstudiantes +
-                ", salon=" + salon +
+                ", salon='" + salon.getCodigo() + '\'' +
                 '}';
     }
 }

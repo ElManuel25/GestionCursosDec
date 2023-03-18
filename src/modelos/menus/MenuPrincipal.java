@@ -20,7 +20,7 @@ public class MenuPrincipal extends Menu {
             int opcion = leerOpcion(4);
             switch (opcion){
                 case 1:
-                    MenuCursos menuCursos = new MenuCursos(cursos);
+                    MenuCursos menuCursos = new MenuCursos(cursos, asignaturas, docentes, salones);
                     break;
                 case 2:
                     MenuAsignaturas menuAsignaturas = new MenuAsignaturas(asignaturas);

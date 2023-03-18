@@ -5,14 +5,14 @@ import java.util.Scanner;
 
 public  abstract class Menu {
     final public Scanner scanner = new Scanner(System.in);
-    public int confirmarContinuar() {
+    public boolean confirmarContinuar() {
         System.out.print("[!] ¿Desea continuar? Presione 1 para continuar o 0 para salir: ");
-        int op = scanner.nextInt();
-        return op;
+        int op = obtenerEntradaInt();
+        return op > 0;
     }
     public int leerOpcion(int cantidadOpciones) {
         int opcion = obtenerEntradaInt();
-        while (opcion > cantidadOpciones){
+        while (opcion > cantidadOpciones || opcion <=0){
             System.out.println("Valor ingresado sobrepasa a las opciones dadas ingrese nuevamente un valor correcto.");
             opcion = obtenerEntradaInt();
         }
@@ -28,17 +28,12 @@ public  abstract class Menu {
         }
         return Integer.parseInt(entradaUsuario);
     }
-    public void verIterable(LinkedList<Object> lista){
-        for (int i = 0;i < lista.size();i++){
-            System.out.printf("[%d] %s%n", i+1,lista.get(i).toString());
-        }
-    }
     private boolean validarEntradaInt(String entrada){
         return entrada.matches("\\d+");
     }
     public String obtenerEntradaTexto(String pregunta){
         System.out.println(pregunta);
-        return  scanner.nextLine();
+        return  scanner.next();
     }
     public void mostrarOpciones(String titulo,String cabecera, String ...opciones){
         StringBuilder sb = new StringBuilder();

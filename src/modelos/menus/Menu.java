@@ -5,15 +5,15 @@ import java.util.Scanner;
 
 public  abstract class Menu {
     final public Scanner scanner = new Scanner(System.in);
-    public int confirmarContinuar() {
+    public boolean confirmarContinuar() {
         System.out.print("[!] ¿Desea continuar? Presione 1 para continuar o 0 para salir: ");
-        int op = scanner.nextInt();
-        return op;
+        int op = obtenerEntradaInt();
+        return op > 0;
     }
     public int leerOpcion(int cantidadOpciones) {
         int opcion = obtenerEntradaInt();
-        while (opcion > cantidadOpciones){
-            System.out.println("Valor ingresado sobrepasa a las opciones dadas, ingrese nuevamente un valor correcto.");
+        while (opcion > cantidadOpciones || opcion <=0){
+            System.out.println("Opción ingresada no valida, ingrese nuevamente un valor correcto");
             opcion = obtenerEntradaInt();
         }
         return opcion;
@@ -23,7 +23,7 @@ public  abstract class Menu {
         String entradaUsuario = scanner.next();
         while (!validarEntradaInt(entradaUsuario)){
             System.out.println("Opción ingresada no válida, ingrese nuevamente un valor correcto.");
-
+            System.out.print("> ");
             entradaUsuario = scanner.next();
         }
         return Integer.parseInt(entradaUsuario);
@@ -45,10 +45,12 @@ public  abstract class Menu {
         System.out.print("> ");
         return scanner.next();
     }
-    public void mostrarOpciones(String titulo, String ...opciones){
+    public void mostrarOpciones(String titulo,String cabecera, String ...opciones){
         StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append(titulo);
+        sb.append("\n");
+        sb.append(cabecera);
         sb.append("\n");
         int numeroOpcion= 1;
         for(String opcion:opciones){

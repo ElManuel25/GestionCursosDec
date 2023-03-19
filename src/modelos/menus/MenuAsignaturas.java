@@ -1,92 +1,120 @@
 package modelos.menus;
-
 import modelos.entidades.Asignatura;
-
+import modelos.entidades.Curso;
 import java.util.LinkedList;
 
-public class MenuAsignaturas extends Menu{
-    public MenuAsignaturas(LinkedList<Asignatura> asignaturas){
+public class MenuAsignaturas extends Menu {
+    public MenuAsignaturas(LinkedList<Asignatura> asignaturas, LinkedList<Curso> cursos) {
         boolean continuar = true;
-        while(continuar) {
-            mostrarOpciones(" ===== MENÚ DE OPCIONES =====","[ GESTIÓN DE ASIGNATURAS ]"," Ver asignaturas","Crear asignatura","Editar asignatura","Eliminar asignatura");
-            int opcion = leerOpcion(4);
-            switch (opcion){
-                case 1:
-                    verAsignaturas(asignaturas);
-                    break;
-                case 2:
-                    crearAsignatura(asignaturas);
-                    break;
-                case 3:
-                    editarAsignatura(asignaturas);
-                    break;
-                case 4:
-                    eliminarAsignatura(asignaturas);
-                    break;
-            }
-            continuar = confirmarContinuar();
-        }
-    }
-    private void verAsignaturas(LinkedList<Asignatura> asignaturas){
-        for (int i = 0;i < asignaturas.size();i++){
-            System.out.printf("[%d] %s%n", i+1,asignaturas.get(i).toString());
-        }
-    }
-
-    private void crearAsignatura(LinkedList<Asignatura> asignaturas){
-        String codigo =  obtenerEntradaTexto("Ingrese codigo de la asignatura");
-        while (!verificarCodigoUnico(codigo,asignaturas)){
-            System.out.println("El codigo de la asignatura debe ser unico, por favor ingrese un codigo diferente;");
-            codigo = obtenerEntradaTexto("Ingrese codigo de la asignatura");
-        }
-        String nombre = obtenerEntradaTexto("Ingrese nombre de la  asignatura");
-        Asignatura nuevaAsignatura = new Asignatura(codigo,nombre);
-        asignaturas.add(nuevaAsignatura);
-        System.out.println("Asignatura agregada correctamente");
-    }
-    private boolean verificarCodigoUnico(String codigo,LinkedList<Asignatura> asignaturas){
-        for(Asignatura asignatura:asignaturas){
-            if(asignatura.getCodigo().equals(codigo)){
-                return false;
-            }
-        }
-        return  true;
-    }
-
-    private int posicionAsignaturaSelecionada(LinkedList<Asignatura> asignaturas){
-        verAsignaturas(asignaturas);
-        System.out.println("Ingrese posicion de la asignatura que desea selecionar");
-        return leerOpcion(asignaturas.size())-1;
-    }
-    private void editarAsignatura(LinkedList<Asignatura> asignaturas){
-       int posicion = posicionAsignaturaSelecionada(asignaturas);
-        Asignatura asignaturaSelecionada = asignaturas.get(posicion);
-        while (true){
-            System.out.println("> asignatura selecionada: "+asignaturaSelecionada.toString());
-            mostrarOpciones("[ GESTIÓN DE ASIGNATURAS ]","[ EDITAR ASIGNATURA ]","Editar Codigo","Editar nombre","Salir");
-            int opcion = leerOpcion(3);
+        while (continuar) {
+            String[] opciones = new String[]{
+                    "Ver asignaturas", "Agregar asignatura", "Editar asignatura", "Eliminar asignatura", "Volver"
+            };
+            mostrarOpciones("[GESTIÓN DE ASIGNATURAS]", "Opciones:", opciones);
+            int opcion = leerOpcion(opciones.length);
             switch (opcion) {
-                case 1 -> {
-                    String codigo = obtenerEntradaTexto("Ingrese el nuevo codigo de la asignatura");
-                    while (!verificarCodigoUnico(codigo, asignaturas)) {
-                        System.out.println("El codigo de la asignatura debe ser unico, por favor ingrese un codigo diferente;");
-                        codigo = obtenerEntradaTexto("Ingrese el nuevo codigo de la asignatura");
-                    }
-                    asignaturaSelecionada.setCodigo(codigo);
-                }
-                case 2 -> {
-                    String nombre = obtenerEntradaTexto("Ingrese el nuevo nombre de la asignatura");
-                    asignaturaSelecionada.setNombre(nombre);
-                }
-                case 3 -> {
-                    return;
-                }
+                case 1 -> verAsignaturas(asignaturas);
+                case 2 -> agregarAsignatura(asignaturas);
+                case 3 -> editarAsignatura(asignaturas);
+                case 4 -> eliminarAsignatura(asignaturas, cursos);
+                case 5 -> continuar = false;
             }
-
         }
     }
-    private void eliminarAsignatura(LinkedList<Asignatura> asignaturas){
-        int posicion = posicionAsignaturaSelecionada(asignaturas);
-        asignaturas.remove(posicion);
+
+    private void verAsignaturas(LinkedList<Asignatura> asignaturas) {
+        System.out.println("- LISTA DE ASIGNATURAS -");
+        verIterable(asignaturas);
+    }
+
+    private void agregarAsignatura(LinkedList<Asignatura> asignaturas) {
+        asignaturas.add(new Asignatura(obtenerDatoCodigo(asignaturas), obtenerDatoNombre()));
+        System.out.println("[!] Asignatura agregada correctamente");
+    }
+
+    private String obtenerDatoCodigo(LinkedList<Asignatura> asignaturas) {
+        String codigo = "";
+        boolean codigoIncorrecto = true;
+        while (codigoIncorrecto) {
+            codigo = obtenerEntradaTexto("Ingresa el código de la asignatura:");
+            if (!verificarCodigoUnico(codigo, asignaturas)) {
+                System.out.println("El código de la asignatura debe ser único, por favor ingrese un código diferente.");
+            } else {
+                codigoIncorrecto = false;
+            }
+        }
+        return codigo;
+    }
+
+    private boolean verificarCodigoUnico(String codigo, LinkedList<Asignatura> asignaturas) {
+        for (Asignatura asignatura : asignaturas) {
+            if (asignatura.getCodigo().equals(codigo)) { return false; }
+        }
+        return true;
+    }
+
+    private String obtenerDatoNombre() { return obtenerEntradaTexto("Ingrese el nombre:"); }
+
+    private void editarAsignatura(LinkedList<Asignatura> asignaturas) {
+        if (hayAsignaturasRegistradas(asignaturas)) {
+            int indice = obtenerIndiceAsignatura(asignaturas);
+            Asignatura asignatura = asignaturas.get(indice);
+            boolean continuar = true;
+            while (continuar) {
+                String[] opciones = new String[]{"Cambiar código", "Cambiar nombre", "Volver"};
+                mostrarOpciones(
+                        "[GESTIÓN DE ASIGNATURAS]",
+                        "- EDITAR ASIGNATURA #" + (indice + 1) + " -",
+                        opciones
+                );
+                int opcion = leerOpcion(opciones.length);
+                switch (opcion) {
+                    case 1 -> {
+                        asignatura.setCodigo(obtenerDatoCodigo(asignaturas));
+                        System.out.println("[!] Código editado correctamente.");
+                    }
+                    case 2 -> {
+                        asignatura.setNombre(obtenerDatoNombre());
+                        System.out.println("[!] Nombre editado correctamente.");
+                    }
+                    case 3 -> continuar = false;
+                }
+            }
+        }
+    }
+
+    private void eliminarAsignatura(LinkedList<Asignatura> asignaturas, LinkedList<Curso> cursos) {
+        if (hayAsignaturasRegistradas(asignaturas)) {
+            int indice = obtenerIndiceAsignatura(asignaturas);
+            if (verificarEliminarAsignatura(asignaturas.get(indice), cursos)) {
+                asignaturas.remove(indice);
+                System.out.println("[!] Asignatura eliminada correctamente.");
+            } else {
+                System.out.println("[!] No se puede eliminar la asignatura porque hay cursos registrados para ella.");
+            }
+        }
+    }
+
+    private int obtenerIndiceAsignatura(LinkedList<Asignatura> asignaturas) {
+        verAsignaturas(asignaturas);
+        System.out.println("Ingresa el índice de la asignatura:");
+        return leerOpcion(asignaturas.size()) - 1;
+    }
+
+    private boolean hayAsignaturasRegistradas(LinkedList<Asignatura> asignaturas) {
+        if (asignaturas.size() == 0) {
+            System.out.println("[!] No hay asignaturas registradas.");
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    private boolean verificarEliminarAsignatura(Asignatura asignatura, LinkedList<Curso> cursos) {
+        for (Curso curso : cursos) {
+            if (curso.getAsignatura() == asignatura) { return false; }
+        }
+        return true;
     }
 }

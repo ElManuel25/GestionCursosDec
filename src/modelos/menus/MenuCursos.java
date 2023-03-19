@@ -1,7 +1,5 @@
 package modelos.menus;
-
 import modelos.entidades.*;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,38 +10,22 @@ public class MenuCursos extends Menu {
             LinkedList<Docente> docentes,
             LinkedList<Salon> salones
     ) {
-        Boolean continuar = true;
+        boolean continuar = true;
         while (continuar) {
-            mostrarOpciones("[GESTIÓN DE CURSOS]", "Opciones:",
-                    "Ver cursos", "Ver horario", "Agregar curso", "Editar curso", "Gestionar horario",
-                    "Eliminar curso", "Volver");
-            int opcion = leerOpcion(7);
+            String[] opciones = new String[]{
+                    "Ver cursos", "Ver horario", "Agregar curso", "Editar curso",
+                    "Gestionar horario", "Eliminar curso", "Volver"
+            };
+            mostrarOpciones("[GESTIÓN DE CURSOS]", "Opciones:", opciones);
+            int opcion = leerOpcion(opciones.length);
             switch (opcion) {
-                case 1:
-                    verCursos(cursos);
-                    break;
-                case 2:
-                    verCursos(cursos);
-                    verHorario(cursos);
-                    break;
-                case 3:
-                    agregarCurso(cursos, asignaturas, docentes, salones);
-                    break;
-                case 4:
-                    verCursos(cursos);
-                    editarCurso(cursos, asignaturas, docentes, salones);
-                    break;
-                case 5:
-                    verCursos(cursos);
-                    gestionarHorario(cursos);
-                    break;
-                case 6:
-                    verCursos(cursos);
-                    eliminarCurso(cursos, asignaturas, docentes, salones);
-                    break;
-                case 7:
-                    continuar = false;
-                    break;
+                case 1 -> verCursos(cursos);
+                case 2 -> verHorario(cursos);
+                case 3 -> agregarCurso(cursos, asignaturas, docentes, salones);
+                case 4 -> editarCurso(cursos, asignaturas, docentes, salones);
+                case 5 -> gestionarHorario(cursos);
+                case 6 -> eliminarCurso(cursos, salones);
+                case 7 -> continuar = false;
             }
         }
     }
@@ -53,14 +35,24 @@ public class MenuCursos extends Menu {
         verIterable(cursos);
     }
 
+    private void verAsignaturas(LinkedList<Asignatura> asignaturas) {
+        System.out.println("- LISTA DE ASIGNATURAS -");
+        verIterable(asignaturas);
+    }
+
+    private void verDocentes(LinkedList<Docente> docentes) {
+        System.out.println("- LISTA DE DOCENTES -");
+        verIterable(docentes);
+    }
+
+    private void verSalones(LinkedList<Salon> salones) {
+        System.out.println("- LISTA DE SALONES -");
+        verIterable(salones);
+    }
+
     private void verHorario(LinkedList<Curso> cursos) {
-        if (cursos.size() < 1) {
-            System.out.println("[!] No hay cursos registrados.");
-        } else {
-            System.out.println("Ingresa el índice del curso para ver su horario:");
-            int indice = leerOpcion(cursos.size());
-            Curso curso = cursos.get(indice - 1);
-            curso.getSalon().mostrarHorarioCurso(curso);
+        if (hayCursosRegistrados(cursos)) {
+            cursos.get(obtenerIndiceCurso(cursos)).mostrarHorario();
         }
     }
 
@@ -70,35 +62,74 @@ public class MenuCursos extends Menu {
             LinkedList<Docente> docentes,
             LinkedList<Salon> salones
     ) {
-        String codigo = obtenerEntradaTexto("Ingresa el código del curso:");
-        System.out.println("- LISTA DE ASIGNATURAS -");
-        verIterable(asignaturas);
-        if (asignaturas.size() < 1) {
-            System.out.println("[!] Es necesario que hayan asignaturas registradas para registrar el curso.");
-            return;
+        String codigo = obtenerDatoCodigo(cursos);
+        Asignatura asignatura = obtenerDatoAsignatura(asignaturas);
+        Docente docente = obtenerDatoDocente(docentes);
+        int numeroEstudiantes = obtenerDatosNumeroEstudiantes();
+        Salon salon = obtenerDatoSalon(salones);
+        if (asignatura != null && docente != null && salon != null) {
+            cursos.add(new Curso(codigo, asignatura, docente, numeroEstudiantes, salon));
+            System.out.println("[!] Curso agregado correctamente.");
+        }
+        else {
+            System.out.println("[!] No se pudo añadir el curso.");
+        }
+    }
+
+    private String obtenerDatoCodigo(LinkedList<Curso> cursos) {
+        String codigo = "";
+        boolean codigoIncorrecto = true;
+        while (codigoIncorrecto) {
+            codigo = obtenerEntradaTexto("Ingresa el código del curso:");
+            if (!verificarCodigoUnico(codigo, cursos)) {
+                System.out.println("El código del curso debe ser único, por favor ingrese un código diferente.");
+            } else {
+                codigoIncorrecto = false;
+            }
+        }
+        return codigo;
+    }
+
+    private boolean verificarCodigoUnico(String codigo, LinkedList<Curso> cursos) {
+        for (Curso curso : cursos) {
+            if (curso.getCodigo().equals(codigo)) { return false; }
+        }
+        return true;
+    }
+
+    private Asignatura obtenerDatoAsignatura(LinkedList<Asignatura> asignaturas) {
+        verAsignaturas(asignaturas);
+        if (asignaturas.size() == 0) {
+            System.out.println("[!] Es necesario que hayan asignaturas registradas.");
+            return null;
         }
         System.out.println("Ingresa el índice de la asignatura:");
-        Asignatura asignatura = asignaturas.get(leerOpcion(asignaturas.size()) - 1);
-        System.out.println("- LISTA DE DOCENTES -");
-        verIterable(docentes);
-        if (docentes.size() < 1) {
-            System.out.println("[!] Es necesario que hayan docentes registrados para registrar el curso.");
-            return;
+        return asignaturas.get(leerOpcion(asignaturas.size()) - 1);
+    }
+
+    private Docente obtenerDatoDocente(LinkedList<Docente> docentes) {
+        verDocentes(docentes);
+        if (docentes.size() == 0) {
+            System.out.println("[!] Es necesario que hayan docentes registrados.");
+            return null;
         }
         System.out.println("Ingresa el índice del docente:");
-        Docente docente = docentes.get(leerOpcion(docentes.size()) - 1);
+        return docentes.get(leerOpcion(docentes.size()) - 1);
+    }
+
+    private int obtenerDatosNumeroEstudiantes() {
         System.out.println("Ingresa el número de estudiantes:");
-        int numeroEstudiantes = obtenerEntradaInt();
-        System.out.println("- LISTA DE SALONES -");
-        verIterable(salones);
-        if (salones.size() < 1) {
-            System.out.println("[!] Es necesario que hayan salones registrados para registrar el curso.");
-            return;
+        return obtenerEntradaInt();
+    }
+
+    private Salon obtenerDatoSalon(LinkedList<Salon> salones) {
+        verSalones(salones);
+        if (salones.size() == 0) {
+            System.out.println("[!] Es necesario que hayan salones registrados.");
+            return null;
         }
         System.out.println("Ingresa el índice del salón:");
-        Salon salon = salones.get(leerOpcion(salones.size()) - 1);
-        cursos.add(new Curso(codigo, asignatura, docente, numeroEstudiantes, salon));
-        System.out.println("[!] Curso agregado correctamente.");
+        return salones.get(leerOpcion(salones.size()) - 1);
     }
 
     private void editarCurso(
@@ -107,107 +138,164 @@ public class MenuCursos extends Menu {
             LinkedList<Docente> docentes,
             LinkedList<Salon> salones
     ) {
-        if (cursos.size() < 1) {
-            System.out.println("[!] No hay cursos registrados.");
-        } else {
-            System.out.println("Ingresa el índice del curso a editar:");
-            int indice = leerOpcion(cursos.size());
-            Curso curso = cursos.get(indice - 1);
-
-            Boolean continuar = true;
+        if (hayCursosRegistrados(cursos)) {
+            int indice = obtenerIndiceCurso(cursos);
+            Curso curso = cursos.get(indice);
+            boolean continuar = true;
             while (continuar) {
-                mostrarOpciones("[GESTIÓN DE CURSOS]", "- EDITAR CURSO #" + indice + " -",
+                String[] opciones = new String[]{
                         "Cambiar código", "Cambiar asignatura", "Cambiar docente",
-                        "Cambiar número de estudiantes", "Cambiar salón", "Volver");
-                int opcion = leerOpcion(6);
+                        "Cambiar número de estudiantes", "Cambiar salón", "Volver"
+                };
+                mostrarOpciones("[GESTIÓN DE CURSOS]", "- EDITAR CURSO #" + indice + " -", opciones);
+                int opcion = leerOpcion(opciones.length);
                 switch (opcion) {
-                    case 1:
-                        String codigo = obtenerEntradaTexto("Ingresa el nuevo código del curso:");
-                        curso.setCodigo(codigo);
+                    case 1 -> {
+                        curso.setCodigo(obtenerDatoCodigo(cursos));
                         System.out.println("[!] Código editado correctamente.");
-                        break;
-                    case 2:
-                        System.out.println("- LISTA DE ASIGNATURAS -");
-                        verIterable(asignaturas);
-                        if (asignaturas.size() < 1) {
-                            System.out.println("[!] Es necesario que hayan asignaturas registradas para editar el curso.");
-                            return;
-                        }
-                        System.out.println("Ingresa el índice de la nueva asignatura del curso:");
-                        Asignatura asignatura = asignaturas.get(leerOpcion(asignaturas.size()) - 1);
-                        curso.setAsignatura(asignatura);
-                        System.out.println("[!] Asignatura del curso editada correctamente.");
-                        break;
-                    case 3:
-                        System.out.println("- LISTA DE DOCENTES -");
-                        verIterable(docentes);
-                        if (docentes.size() < 1) {
-                            System.out.println("[!] Es necesario que hayan docentes registrados para editar el curso.");
-                            return;
-                        }
-                        System.out.println("Ingresa el índice del nuevo docente del curso:");
-                        Docente docente = docentes.get(leerOpcion(docentes.size()) - 1);
-                        curso.setDocente(docente);
-                        System.out.println("[!] Docente del curso editado correctamente.");
-                        break;
-                    case 4:
-                        System.out.println("Ingresa el nuevo número de estudiantes:");
-                        int numeroEstudiantes = obtenerEntradaInt();
-                        curso.setNumeroEstudiantes(numeroEstudiantes);
-                        System.out.println("[!] Código editado correctamente.");
-                        break;
-                    case 5:
-                        System.out.println("- LISTA DE SALONES -");
-                        verIterable(salones);
-                        if (salones.size() < 1) {
-                            System.out.println("[!] Es necesario que hayan salones registrados para editar el curso.");
-                            return;
-                        }
-                        System.out.println("Ingresa el índice del nuevo salón del curso:");
-                        Salon actualSalon = curso.getSalon();
-                        Salon nuevoSalon = salones.get(leerOpcion(salones.size()) - 1);
-                        curso.setSalon(nuevoSalon);
-                        Boolean sePuedeTrasladar = true;
-                        for (List<?> clases : actualSalon.obtenerClasesDeUnCurso(curso)) {
-                            Dia dia = (Dia) clases.get(0);
-                            Hora hora = (Hora) clases.get(1);
-                            if (nuevoSalon.existeClaseEnHorario(dia, hora)) {
-                                System.out.println("- No se puede trasladar la clase [" + dia + " " + hora +
-                                        "] al nuevo salón por incompatibilidad con otro curso.");
-                                sePuedeTrasladar = false;
-                            }
-                        }
-                        if (!sePuedeTrasladar) {
-                            System.out.println("[!] No se pudo editar el salón del curso por incompatibilidades.");
+                    }
+                    case 2 -> {
+                        Asignatura asignatura = obtenerDatoAsignatura(asignaturas);
+                        if (asignatura != null) {
+                            curso.setAsignatura(asignatura);
+                            System.out.println("[!] Asignatura del curso editada correctamente.");
                         } else {
+                            System.out.println("[!] No se pudo modificar la asignatura del curso.");
+                        }
+                    }
+                    case 3 -> {
+                        Docente docente = obtenerDatoDocente(docentes);
+                        if (docente != null) {
+                            curso.setDocente(docente);
+                            System.out.println("[!] Docente del curso editado correctamente.");
+                        } else {
+                            System.out.println("[!] No se pudo modificar el docente del curso.");
+                        }
+                    }
+                    case 4 -> {
+                        curso.setNumeroEstudiantes(obtenerDatosNumeroEstudiantes());
+                        System.out.println("[!] Código editado correctamente.");
+                    }
+                    case 5 -> {
+                        Salon actualSalon = curso.getSalon();
+                        Salon nuevoSalon = obtenerDatoSalon(salones);
+                        if (nuevoSalon != null) {
+                            boolean sePuedeTrasladar = true;
                             for (List<?> clases : actualSalon.obtenerClasesDeUnCurso(curso)) {
                                 Dia dia = (Dia) clases.get(0);
                                 Hora hora = (Hora) clases.get(1);
-                                actualSalon.eliminarClaseDelHorario(dia, hora);
-                                nuevoSalon.agregarClaseAlHorario(curso, dia, hora);
+                                if (nuevoSalon.existeClaseEnHorario(dia, hora)) {
+                                    System.out.println("- No se puede trasladar la clase [" + dia + " " + hora +
+                                            "] al nuevo salón por incompatibilidad con otro curso.");
+                                    sePuedeTrasladar = false;
+                                }
                             }
-                            System.out.println("[!] Salón del curso editado correctamente. " +
-                                    "No se encontraron incompatibilidades.");
+                            if (!sePuedeTrasladar) {
+                                System.out.println("[!] No se pudo editar el salón del curso por incompatibilidades.");
+                            } else {
+                                for (List<?> clases : actualSalon.obtenerClasesDeUnCurso(curso)) {
+                                    Dia dia = (Dia) clases.get(0);
+                                    Hora hora = (Hora) clases.get(1);
+                                    actualSalon.eliminarClaseDelHorario(dia, hora);
+                                    nuevoSalon.agregarClaseAlHorario(curso, dia, hora);
+                                }
+                                curso.setSalon(nuevoSalon);
+                                System.out.println("[!] Salón del curso editado correctamente. " +
+                                        "No se encontraron incompatibilidades.");
+                            }
+                        } else {
+                            System.out.println("[!] No se pudo modificar el salón del curso.");
                         }
-                        break;
-                    case 6:
-                        continuar = false;
-                        break;
+                    }
+                    case 6 -> continuar = false;
                 }
             }
         }
     }
 
-    private void gestionarHorario(LinkedList<Curso> curso) {
-
+    private void gestionarHorario(LinkedList<Curso> cursos) {
+        if (cursos.size() < 1) {
+            System.out.println("[!] No hay cursos registrados.");
+        } else {
+            int indice = obtenerIndiceCurso(cursos);
+            Curso curso = cursos.get(indice);
+            boolean continuar = true;
+            while (continuar) {
+                verClases(curso);
+                String[] opciones = new String[]{"Añadir clase", "Eliminar clase", "Volver"};
+                mostrarOpciones("[GESTIÓN DE CURSOS]", "- GESTIONAR HORARIO CURSO #" + (indice + 1) + " -",
+                        opciones);
+                int opcion = leerOpcion(opciones.length);
+                switch (opcion) {
+                    case 1 -> {
+                        System.out.println("- Elige el día de la clase -");
+                        verIterable(new LinkedList<>(List.of(Dia.values())));
+                        System.out.println("Ingresa el índice del día:");
+                        Dia dia = Dia.values()[leerOpcion(Dia.values().length) - 1];
+                        System.out.println("- Elige la hora de la clase -");
+                        verIterable(new LinkedList<>(List.of(Hora.values())));
+                        System.out.println("Ingresa el índice de la hora:");
+                        Hora hora = Hora.values()[leerOpcion(Hora.values().length) - 1];
+                        if (curso.getSalon().agregarClaseAlHorario(curso, dia, hora)) {
+                            System.out.println("[!] Clase añadida correctamente.");
+                        } else {
+                            System.out.println("[!] No se pudo añadir la clase por incompatibilidad con otro curso en" +
+                                    " el salón [" + curso.getSalon().getCodigo() + "].");
+                        }
+                    }
+                    case 2 -> {
+                        LinkedList<LinkedList<?>> clases = curso.getSalon().obtenerClasesDeUnCurso(curso);
+                        if (clases.size() == 0) {
+                            System.out.println("[!] No hay clases registradas para este curso.");
+                        } else {
+                            verClases(curso);
+                            System.out.println("Ingresa el índice de la clase a eliminar:");
+                            int indiceClase = leerOpcion(clases.size()) - 1;
+                            Dia diaClase = (Dia) clases.get(indiceClase).get(0);
+                            Hora horaClase = (Hora) clases.get(indiceClase).get(1);
+                            curso.getSalon().eliminarClaseDelHorario(diaClase, horaClase);
+                            System.out.println("[!] Clase eliminada correctamente.");
+                        }
+                    }
+                    case 3 -> continuar = false;
+                }
+            }
+        }
     }
 
-    private void eliminarCurso(
-            LinkedList<Curso> cursos,
-            LinkedList<Asignatura> asignaturas,
-            LinkedList<Docente> docentes,
-            LinkedList<Salon> salones
-    ) {
+    private void verClases(Curso curso) {
+        System.out.println("- LISTA DE CLASES A LA SEMANA DEL CURSO [SALÓN " +
+                curso.getSalon().getCodigo() + "] -");
+        verIterable(curso.getSalon().obtenerClasesDeUnCurso(curso));
+    }
 
+    private void eliminarCurso(LinkedList<Curso> cursos, LinkedList<Salon> salones) {
+        if (hayCursosRegistrados(cursos)) {
+            int indice = obtenerIndiceCurso(cursos);
+            Curso curso = cursos.get(indice);
+            for (List<?> clases : curso.getSalon().obtenerClasesDeUnCurso(curso)) {
+                Dia dia = (Dia) clases.get(0);
+                Hora hora = (Hora) clases.get(1);
+                curso.getSalon().eliminarClaseDelHorario(dia, hora);
+            }
+            salones.remove(indice);
+            System.out.println("[!] Curso eliminado correctamente.");
+        }
+    }
+
+    private int obtenerIndiceCurso(LinkedList<Curso> cursos) {
+        verCursos(cursos);
+        System.out.println("Ingresa el índice del curso:");
+        return leerOpcion(cursos.size()) - 1;
+    }
+
+    private boolean hayCursosRegistrados(LinkedList<Curso> cursos) {
+        if (cursos.size() == 0) {
+            System.out.println("[!] No hay cursos registrados.");
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 }

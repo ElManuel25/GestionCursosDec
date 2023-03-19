@@ -51,6 +51,10 @@ public class Curso {
         this.salon = salon;
     }
 
+    public void mostrarHorario() {
+        getSalon().mostrarHorarioCurso(this);
+    }
+
     @Override
     public String toString() {
         return "Curso{" +

@@ -2,6 +2,7 @@ package modelos.menus;
 import modelos.entidades.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MenuCursos extends Menu {
     public MenuCursos(
@@ -76,19 +77,14 @@ public class MenuCursos extends Menu {
         }
     }
 
+    //DECLARATIVO
     private String obtenerDatoCodigo(LinkedList<Curso> cursos) {
-        String codigo = "";
-        boolean codigoIncorrecto = true;
-        while (codigoIncorrecto) {
-            codigo = obtenerEntradaTexto("Ingresa el código del curso:");
-            if (!verificarCodigoUnico(codigo, cursos)) {
-                System.out.println("El código del curso debe ser único, por favor ingrese un código diferente.");
-            } else {
-                codigoIncorrecto = false;
-            }
-        }
-        return codigo;
+        return Stream.generate(() -> obtenerEntradaTexto("Ingresa el código del curso:"))
+                .filter(codigo -> verificarCodigoUnico(codigo, cursos))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No se ha ingresado un código válido."));
     }
+
 
     private boolean verificarCodigoUnico(String codigo, LinkedList<Curso> cursos) {
         for (Curso curso : cursos) {
@@ -288,14 +284,12 @@ public class MenuCursos extends Menu {
         System.out.println("Ingresa el índice del curso:");
         return leerOpcion(cursos.size()) - 1;
     }
-
+    //RECORTADO
     private boolean hayCursosRegistrados(LinkedList<Curso> cursos) {
-        if (cursos.size() == 0) {
+        boolean hayCursos = cursos.size() > 0;
+        if (!hayCursos) {
             System.out.println("[!] No hay cursos registrados.");
-            return false;
         }
-        else {
-            return true;
-        }
+        return hayCursos;
     }
 }

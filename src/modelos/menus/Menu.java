@@ -2,6 +2,8 @@ package modelos.menus;
 
 import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public  abstract class Menu {
     final public Scanner scanner = new Scanner(System.in);
@@ -13,35 +15,15 @@ public  abstract class Menu {
     }
 
     public int leerOpcion(int cantidadOpciones) {
-        int opcion = 0;
-        boolean valorIncorrecto = true;
-        while (valorIncorrecto) {
-            opcion = obtenerEntradaInt();
-
-            if (opcion <= 0 || opcion > cantidadOpciones) {
-                System.out.println("Opción ingresada no válida, ingrese nuevamente una opción correcta.");
-            }
-            else {
-                valorIncorrecto = false;
-            }
-        }
-        return opcion;
+        return Stream.generate(this::obtenerEntradaInt).filter(opcion -> opcion > 0 && opcion <= cantidadOpciones).findFirst()
+                .orElseThrow(() -> new RuntimeException("Opción ingresada no válida."));
     }
 
-    public int obtenerEntradaInt(){
-        String entradaUsuario = "";
-        boolean valorIncorrecto = true;
-        while (valorIncorrecto){
-            System.out.print("> ");
-            entradaUsuario = scanner.nextLine();
-            if (!validarEntradaInt(entradaUsuario)) {
-                System.out.println("Valor ingresado debe ser un número entero, ingrese nuevamente un valor correcto.");
-            }
-            else  {
-                valorIncorrecto = false;
-            }
-        }
-        return Integer.parseInt(entradaUsuario);
+    //DECLARATIVO
+    public int obtenerEntradaInt() {
+        System.out.print("> ");
+        return Stream.generate(scanner::nextLine).filter(this::validarEntradaInt).map(Integer::parseInt).findFirst()
+                .orElseThrow(() -> new RuntimeException("No se ha ingresado un número entero válido.")); // Si no se encontró un número entero válido, se lanza una excepción
     }
 
     private boolean validarEntradaInt(String entrada){
@@ -53,29 +35,18 @@ public  abstract class Menu {
         System.out.print("> ");
         return scanner.nextLine();
     }
-
+    // DECLARATIVO +-
     public void verIterable(LinkedList<?> lista){
-        if(lista.size() < 1) {
+        if (lista.isEmpty()) {
             System.out.println("***Lista vacía***");
         } else {
-            for (int i = 0; i < lista.size(); i++) {
-                System.out.printf("[%d] %s%n", i + 1, lista.get(i).toString());
-            }
+            IntStream.range(0, lista.size()).forEach(i -> System.out.printf("[%d] %s%n", i + 1, lista.get(i).toString()));
         }
     }
 
-    public void mostrarOpciones(String titulo,String cabecera, String ...opciones){
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append(titulo);
-        sb.append("\n");
-        sb.append(cabecera);
-        sb.append("\n");
-        int numeroOpcion= 1;
-        for(String opcion:opciones){
-            sb.append("[%d] %s  \n".formatted(numeroOpcion,opcion));
-            numeroOpcion++;
-        }
-        System.out.println(sb);
+    // DECLARATIVO
+    public void mostrarOpciones(String titulo, String cabecera, String... opciones) {
+        System.out.printf("\n%s\n%s\n", titulo, cabecera);
+        IntStream.range(0, opciones.length).mapToObj(i -> String.format("[%d] %s", i + 1, opciones[i])).forEach(System.out::println);
     }
 }
